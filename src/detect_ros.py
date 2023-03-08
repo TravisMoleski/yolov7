@@ -4,6 +4,7 @@ import argparse
 import time
 from pathlib import Path
 import numpy as np
+import sys
 
 import cv2
 import torch
@@ -124,13 +125,12 @@ def detect(topic):
         bounding_boxes.image_header.stamp = rospy.Time.now()
         box_list = []
 
-
         t_start = time.time()
         img0 = im_hand.cv_image
         h0, w0 = img0.shape[:2]  # orig hw
-        r = imgsz / max(h0, w0)  # resize image to img_size
-        if r != 1:
-            img0 = cv2.resize(img0, (int(w0 * r), int(h0 * r)), interpolation=cv2.INTER_AREA )
+        # r = imgsz / max(h0, w0)  # resize image to img_size
+        # if r != 1:
+        #     img0 = cv2.resize(img0, (int(w0 * r), int(h0 * r)), interpolation=cv2.INTER_AREA )
 
         # Letterbox
         img = letterbox(img0, imgsz, stride=32)[0]
@@ -181,17 +181,18 @@ def detect(topic):
             # gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  # normalization gain whwh
             if len(det):
                 # Rescale boxes from img_size to im0 size
+                # print(det)
                 det[:, :4] = scale_coords(img.shape[2:], det[:, :4], img0.shape).round()
-
+                # print(det)
                 # Print results
                 # for c in det[:, -1].unique():
                 #     n = (det[:, -1] == c).sum()  # detections per class
                 #     s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
-
+                # sys.exit(1)
                 # # Write results
                 for *xyxy, conf, cls in reversed(det):
                     bbox = BoundingBox()
-                    print(float(conf), names[int(cls)])
+                    # print(float(conf), names[int(cls)])
                     # if save_txt:  # Write to file
                         # xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
                         # line = (cls, *xywh, conf) if opt.save_conf else (cls, *xywh)  # label format
@@ -203,12 +204,11 @@ def detect(topic):
 
                     plot_one_box(xyxy, img0, label=label, color=colors[int(cls)], line_thickness=3)
 
-                    xyxy_nump = [int(i) for i in xyxy]
+                    bbox.xmin = int(xyxy[0])
+                    bbox.xmax = int(xyxy[2])
+                    bbox.ymin = int(xyxy[1])
+                    bbox.ymax = int(xyxy[3])
 
-                    bbox.xmin = np.min([xyxy_nump[0], xyxy_nump[2]])
-                    bbox.xmax = np.max([xyxy_nump[0], xyxy_nump[2]])
-                    bbox.ymin = np.min([xyxy_nump[1], xyxy_nump[3]])
-                    bbox.ymax = np.max([xyxy_nump[1], xyxy_nump[3]])
                     bbox.probability = float(conf)
                     bbox.Class = f'{names[int(cls)]}'
                     bbox.id = int(cls)
@@ -216,7 +216,8 @@ def detect(topic):
 
                 bounding_boxes.bounding_boxes = box_list
                 bounding_boxes.header.stamp = rospy.Time.now()
-                rospy.loginfo(bounding_boxes)
+                # rospy.loginfo(bounding_boxes)
+
                 if view_img:
                     resize = cv2.resize(img0, [640, 480],interpolation = cv2.INTER_AREA)
                     cv2.imshow(topic, resize)
@@ -290,7 +291,7 @@ if __name__ == '__main__':
     rospy.init_node('yolov7', anonymous=True)
 
     topic = '/camera/image_raw_bgr_opencv'
-
+    
     rospy.wait_for_message(topic, Image, timeout=60)
     with torch.no_grad():
         if opt.update:  # update all models (to fix SourceChangeWarning)
