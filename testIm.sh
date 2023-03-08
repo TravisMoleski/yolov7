@@ -1,1 +1,0 @@
-python detect_ros.py --weights weights/yolov7.pt --conf 0.55 --img-size 640 --source video/vanMako.mp4
