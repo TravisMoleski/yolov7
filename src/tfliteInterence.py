@@ -14,7 +14,7 @@ from collections import OrderedDict,namedtuple
 print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
 # Load the TFLite model and allocate tensors.
-interpreter = tf.lite.Interpreter(model_path="./content/yolov7_model.tflite")
+interpreter = tf.lite.Interpreter(model_path="./weights/tflite/cocov7-tiny.tflite")
 interpreter.allocate_tensors()
 
 # Get input and output tensors.
@@ -64,7 +64,7 @@ names = ['person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', '
 #Creating random colors for bounding box visualization.
 colors = {name:[random.randint(0, 255) for _ in range(3)] for i,name in enumerate(names)}
 
-img = cv2.imread('./imgs/58733864-enjoying-sun-man-is-caressing-yellow-labrador-retriever-young-man-sitting-on-the-hill-with-his-dog-a.jpg')
+img = cv2.imread('./testImg/newyork.jpg')
 while 1:
     t_start = time.time()
     # img = cv2.imread('./imgs/58733864-enjoying-sun-man-is-caressing-yellow-labrador-retriever-young-man-sitting-on-the-hill-with-his-dog-a.jpg')

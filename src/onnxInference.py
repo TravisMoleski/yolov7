@@ -11,8 +11,8 @@ from pathlib import Path
 from collections import OrderedDict,namedtuple
 
 cuda = True
-w = "./content/yolov7.onnx"
-img = cv2.imread('./imgs/58733864-enjoying-sun-man-is-caressing-yellow-labrador-retriever-young-man-sitting-on-the-hill-with-his-dog-a.jpg')
+w = "./weights/onnx/yolov7-tiny.onnx"
+img = cv2.imread('./testImg/newyork.jpg')
      
 #Loading the ONNX inference session.
 providers = ['CUDAExecutionProvider', 'CPUExecutionProvider'] if cuda else ['CPUExecutionProvider']
