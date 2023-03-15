@@ -40,11 +40,12 @@ class image_handler(object):
 
         self.bbox_pub  = rospy.Publisher('/yolov7/bounding_boxes', BoundingBoxes, queue_size=1)
 
-    def callback(self,data):
+    def callback(self,image_data):
         # print("CALLBACK")
         try:
             # print("OOOOOOOOOOF")
-            self.cv_image = self.bridge.imgmsg_to_cv2(data,desired_encoding= "rgb8")
+            # self.cv_image = self.bridge.imgmsg_to_cv2(data,desired_encoding= "rgb8")
+            self.cv_image = np.frombuffer(image_data.data, dtype=np.uint8).reshape(image_data.height, image_data.width, -1)
             # self.yolo_img = cv2.cvtColor(self.cv_image,cv2.COLOR_BGR2RGB)
 
             # self.image_pub_opencv.publish(self.bridge.cv2_to_imgmsg(self.yolo_img, "bgr8"))
@@ -59,6 +60,7 @@ def detect(topic):
     # save_img = not opt.nosave and not source.endswith('.txt')  # save inference images
     save_img = False
     save_txt = False
+    trace = False
     # webcam = source.isnumeric() or source.endswith('.txt') or source.lower().startswith(
         # ('rtsp://', 'rtmp://', 'http://', 'https://'))
 
@@ -224,7 +226,19 @@ def detect(topic):
                     cv2.waitKey(1)  # 1 millisecond
 
                 t_end = time.time()
-                im_hand.image_pub.publish(im_hand.bridge.cv2_to_imgmsg(img0, "bgr8"))
+
+
+                ros_image = Image(encoding="mono8")
+                # Create the header
+                ros_image.header.stamp = rospy.Time.now()
+                # ros_image.header.frame_id = id
+                # Fill the image data 
+                ros_image.height, ros_image.width = img0.shape[:2]
+                ros_image.data = img0.ravel().tobytes() # or .tostring()
+                ros_image.step=ros_image.width
+                
+                # im_hand.image_pub.publish(im_hand.bridge.cv2_to_imgmsg(img0, "bgr8"))
+                im_hand.image_pub.publish(ros_image)
                 im_hand.bbox_pub.publish(bounding_boxes)
                 print("UPDATE RATE:", 1/(t_end-t_start))
 
@@ -266,9 +280,9 @@ def detect(topic):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--weights', nargs='+', type=str, default='yolov7.pt', help='model.pt path(s)')
+    parser.add_argument('--weights', nargs='+', type=str, default='yolov7-tiny.pt', help='model.pt path(s)')
     parser.add_argument('--source', type=str, default='inference/images', help='source')  # file/folder, 0 for webcam
-    parser.add_argument('--img-size', type=int, default=640, help='inference size (pixels)')
+    parser.add_argument('--img-size', type=int, default=320, help='inference size (pixels)')
     parser.add_argument('--conf-thres', type=float, default=0.60, help='object confidence threshold')
     parser.add_argument('--iou-thres', type=float, default=0.60, help='IOU threshold for NMS')
     parser.add_argument('--device', default='', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
@@ -295,7 +309,7 @@ if __name__ == '__main__':
     rospy.wait_for_message(topic, Image, timeout=60)
     with torch.no_grad():
         if opt.update:  # update all models (to fix SourceChangeWarning)
-            for opt.weights in ['yolov7.pt']:
+            for opt.weights in ['yolov7-tiny.pt']:
                 detect(topic)
                 strip_optimizer(opt.weights)
         else:
