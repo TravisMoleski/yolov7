@@ -203,9 +203,9 @@ def detect(topic):
                         #     f.write(('%g ' * len(line)).rstrip() % line + '\n')
 
                     # if save_img or view_img:  # Add bbox to image
-                    if view_img:
-                        label = f'{names[int(cls)]} {conf:.2f}'
-                        plot_one_box(xyxy, img0, label=label, color=colors[int(cls)], line_thickness=3)
+                    # if view_img:
+                    label = f'{names[int(cls)]} {conf:.2f}'
+                    plot_one_box(xyxy, img0, label=label, color=colors[int(cls)], line_thickness=3)
 
                     bbox.xmin = int(xyxy[0])
                     bbox.xmax = int(xyxy[2])
