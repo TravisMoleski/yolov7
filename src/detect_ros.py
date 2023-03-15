@@ -125,11 +125,10 @@ def detect(topic):
         # Process detections
         bounding_boxes = BoundingBoxes()
         bounding_boxes.image_header.stamp = rospy.Time.now()
-        box_list = []
 
         t_start = time.time()
         img0 = im_hand.cv_image
-        h0, w0 = img0.shape[:2]  # orig hw
+        # h0, w0 = img0.shape[:2]  # orig hw
         # r = imgsz / max(h0, w0)  # resize image to img_size
         # if r != 1:
         #     img0 = cv2.resize(img0, (int(w0 * r), int(h0 * r)), interpolation=cv2.INTER_AREA )
@@ -171,6 +170,8 @@ def detect(topic):
         if classify:
             pred = apply_classifier(pred, modelc, img, im0s)
 
+        box_list = [None] * len(pred[0])
+        count = 0
         for i, det in enumerate(pred):  # detections per image
             # if webcam:  # batch_size >= 1
             #     p, s, im0, frame = path[i], '%g: ' % i, im0s[i].copy(), dataset.count
@@ -202,9 +203,9 @@ def detect(topic):
                         #     f.write(('%g ' * len(line)).rstrip() % line + '\n')
 
                     # if save_img or view_img:  # Add bbox to image
-                    label = f'{names[int(cls)]} {conf:.2f}'
-
-                    plot_one_box(xyxy, img0, label=label, color=colors[int(cls)], line_thickness=3)
+                    if view_img:
+                        label = f'{names[int(cls)]} {conf:.2f}'
+                        plot_one_box(xyxy, img0, label=label, color=colors[int(cls)], line_thickness=3)
 
                     bbox.xmin = int(xyxy[0])
                     bbox.xmax = int(xyxy[2])
@@ -214,7 +215,9 @@ def detect(topic):
                     bbox.probability = float(conf)
                     bbox.Class = f'{names[int(cls)]}'
                     bbox.id = int(cls)
-                    box_list.append(bbox)
+                    box_list[count] = bbox
+
+                    count += 1
 
                 bounding_boxes.bounding_boxes = box_list
                 bounding_boxes.header.stamp = rospy.Time.now()
@@ -228,7 +231,7 @@ def detect(topic):
                 t_end = time.time()
 
 
-                ros_image = Image(encoding="mono8")
+                ros_image = Image(encoding="rgb8")
                 # Create the header
                 ros_image.header.stamp = rospy.Time.now()
                 # ros_image.header.frame_id = id
