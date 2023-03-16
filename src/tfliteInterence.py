@@ -14,7 +14,7 @@ from collections import OrderedDict,namedtuple
 print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
 # Load the TFLite model and allocate tensors.
-interpreter = tf.lite.Interpreter(model_path="./weights/tflite/cocov7-tiny.tflite")
+interpreter = tf.lite.Interpreter(model_path="./weights/tf_lite/cocov7-tiny.tflite")
 interpreter.allocate_tensors()
 
 # Get input and output tensors.
@@ -68,6 +68,7 @@ img = cv2.imread('./testImg/newyork.jpg')
 while 1:
     t_start = time.time()
     # img = cv2.imread('./imgs/58733864-enjoying-sun-man-is-caressing-yellow-labrador-retriever-young-man-sitting-on-the-hill-with-his-dog-a.jpg')
+    img = cv2.imread('./testImg/newyork.jpg')
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     image = img.copy()
@@ -109,14 +110,14 @@ while 1:
         rect2 = tuple(np.array(box[2:]).astype(int))
         # print(rect1)
 
-        # cv2.rectangle(image,rect1,rect2,color=color)
-        # cv2.putText(image,name,(box[0], box[1] - 2),cv2.FONT_HERSHEY_SIMPLEX,0.75,[225, 255, 255],thickness=2)  
+        cv2.rectangle(image,rect1,rect2,color=color)
+        cv2.putText(image,name,(box[0], box[1] - 2),cv2.FONT_HERSHEY_SIMPLEX,0.75,[225, 255, 255],thickness=2)  
 
     # Image.fromarray(ori_images[0])
     t_end = time.time()
 
     print("FPS: ", 1 /(t_end-t_start))
 
-    # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-    # cv2.imshow("YOLOV7 Onnx", image)
-    # cv2.waitKey(1)
+    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+    cv2.imshow("YOLOV7 Onnx", image)
+    cv2.waitKey(1)
