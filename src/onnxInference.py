@@ -23,7 +23,7 @@ print(ort.get_available_providers())
 providers = ['CUDAExecutionProvider']
 
 session = ort.InferenceSession(w, providers=providers)
-sys.exit(1)
+# sys.exit(1)
 
 def letterbox(im, new_shape=(640, 640), color=(114, 114, 114), auto=True, scaleup=True, stride=32):
     # Resize and pad image while meeting stride-multiple constraints
