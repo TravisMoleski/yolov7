@@ -13,7 +13,7 @@ from collections import OrderedDict,namedtuple
 import sys
 
 cuda = True
-w = "./weights/onnx_yv7/yolov7-tiny.onnx"
+w = "./weights/yolov7-tiny.onnx"
      
 #Loading the ONNX inference session.
 # providers = ['CUDAExecutionProvider', 'CPUExecutionProvider'] if cuda else ['CPUExecutionProvider']
