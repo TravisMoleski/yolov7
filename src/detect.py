@@ -110,7 +110,7 @@ def detect(save_img=False):
             if len(det):
                 # Rescale boxes from img_size to im0 size
                 det[:, :4] = scale_coords(img.shape[2:], det[:, :4], im0.shape).round()
-
+                
                 # Print results
                 for c in det[:, -1].unique():
                     n = (det[:, -1] == c).sum()  # detections per class
@@ -118,6 +118,8 @@ def detect(save_img=False):
 
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
+                    label = f'{names[int(cls)]} {conf:.2f}'
+                    print("FOUND: ", label)
                     if save_txt:  # Write to file
                         xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
                         line = (cls, *xywh, conf) if opt.save_conf else (cls, *xywh)  # label format
@@ -189,7 +191,7 @@ if __name__ == '__main__':
 
     with torch.no_grad():
         if opt.update:  # update all models (to fix SourceChangeWarning)
-            for opt.weights in ['yolov7.pt']:
+            for opt.weights in [opt.weights]:
                 detect()
                 strip_optimizer(opt.weights)
         else:

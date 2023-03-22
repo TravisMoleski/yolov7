@@ -1,0 +1,16 @@
+# COCO 2017 dataset http://cocodataset.org
+
+
+# train and val data as 1) directory: path/images/, 2) file: path/images.txt, or 3) list: [path1/images/, path2/images/]
+# train: /media/travis/moleski/YOLO_TRAINING/deer/train.list  # 118287 images
+# val:   /media/travis/moleski/YOLO_TRAINING/deer/valid.list # 5000 images
+
+train: /media/travis/moleski/YOLO_TRAINING/deer/train/images/ # 118287 images
+val:   /media/travis/moleski/YOLO_TRAINING/deer/validate/images # 5000 images
+test:  /media/travis/moleski/YOLO_TRAINING/deer/validate/test   # 20288 of 40670 images, submit to https://competitions.codalab.org/competitions/20794
+
+# number of classes
+nc: 1
+
+# class names
+names: ['deer']

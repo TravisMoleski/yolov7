@@ -135,6 +135,7 @@ def detect(save_img=False):
                         plot_one_box(xyxy, im0, label=label, color=colors[int(cls)], line_thickness=3)
 
                 if view_img:
+                    # print("WTF")
                     resize = cv2.resize(im0, [640, 480],interpolation = cv2.INTER_AREA)
                     cv2.imshow(str(p), resize)
                     cv2.waitKey(1)  # 1 millisecond
@@ -201,7 +202,7 @@ if __name__ == '__main__':
 
     with torch.no_grad():
         if opt.update:  # update all models (to fix SourceChangeWarning)
-            for opt.weights in ['yolov7.pt']:
+            for opt.weights in ['./weights/deer_weights.pt']:
                 detect()
                 strip_optimizer(opt.weights)
         else:

@@ -1,0 +1,1 @@
+python3 train.py --workers 24 --device 0 --batch-size 8 --epochs 30 --data data/deer.yaml --img 640 640 --cfg cfg/training/deer.yaml --weights 'yolov7-tiny.pt' --name deer --hyp data/hyp.scratch.p6.yaml
