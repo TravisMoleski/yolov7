@@ -6,8 +6,8 @@
 # val:   /media/travis/moleski/YOLO_TRAINING/deer/valid.list # 5000 images
 
 train: /media/travis/moleski/YOLO_TRAINING/deer/train/images/ # 118287 images
-val:   /media/travis/moleski/YOLO_TRAINING/deer/validate/images # 5000 images
-test:  /media/travis/moleski/YOLO_TRAINING/deer/validate/test   # 20288 of 40670 images, submit to https://competitions.codalab.org/competitions/20794
+val:   /media/travis/moleski/YOLO_TRAINING/deer/valid.list # 5000 images
+# test:  /media/travis/moleski/YOLO_TRAINING/deer/validate/test   # 20288 of 40670 images, submit to https://competitions.codalab.org/competitions/20794
 
 # number of classes
 nc: 1
