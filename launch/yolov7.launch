@@ -1,0 +1,12 @@
+<launch>
+  <arg name="camera_topic" default="/camera/image_color"/>
+  <arg name="weights"      default="/home/travis/Work/YOLO/yolov7/src/weights/yolov7.pt"/>
+  <arg name="inference_size"      default="1024"/>
+
+  <param name="camera_topic" value="$(arg camera_topic)"/>
+  <param name="weights"      value="$(arg weights)"/>
+  <param name="inference_size"      value="$(arg inference_size)"/>
+
+  <node name="yolov7_node" pkg="yolov7_msgs" type="detect_ros.py" output="screen"/>
+
+</launch>

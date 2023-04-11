@@ -90,20 +90,23 @@ names = ['person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', '
          'microwave', 'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock', 'vase', 'scissors', 'teddy bear', 
          'hair drier', 'toothbrush']
 
+
+names = ['deer', 'starbucks', 'ou_logo', 'tim_hortons', 'kroger', 'traffic_cone']
+
 #Creating random colors for bounding box visualization.
 colors = {name:[random.randint(0, 255) for _ in range(3)] for i,name in enumerate(names)}
 
 rospy.init_node('yolov7', anonymous=True)
-topic = '/camera/image_raw_bgr_opencv'
-view_im = False
+topic = '/usb_cam/image_raw_bgr_opencv'
+view_im = True
 cuda    = True
-w = "./weights/onnx_yv7/yolov7.onnx"
+w = "./weights/onnx_yv7/logos.onnx"
      
 
 # providers = ['CUDAExecutionProvider', 'CPUExecutionProvider'] if cuda else ['CPUExecutionProvider']
 print(ort.get_available_providers())
 
-providers = ['CUDAExecutionProvider']
+providers = ['CPUExecutionProvider']
 session = ort.InferenceSession(w, providers=providers)
 # sys.exit(1)
 
@@ -145,7 +148,7 @@ while not rospy.is_shutdown():
     ori_images = [img.copy()]
 
     #Visualizing bounding box prediction.
-    box_list = [None] * len(outputs)
+    box_list = []
     count = 0
     for i,(batch_id,x0,y0,x1,y1,cls_id,score) in enumerate(outputs):
         image = ori_images[int(batch_id)]
@@ -175,7 +178,9 @@ while not rospy.is_shutdown():
 
         bbox.Class = f'{name}'
         bbox.id = int(cls_id)
-        box_list[count] = bbox
+
+        if float(score) > 0.30:
+            box_list.append(bbox)
 
         # print(bbox)
 

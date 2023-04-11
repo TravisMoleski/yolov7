@@ -64,6 +64,9 @@ names = ['person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', '
          'microwave', 'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock', 'vase', 'scissors', 'teddy bear', 
          'hair drier', 'toothbrush']
 
+names = ['deer', 'starbucks', 'ou_logo', 'tim_hortons', 'kroger', 'traffic_cone']
+
+
 #Creating random colors for bounding box visualization.
 colors = {name:[random.randint(0, 255) for _ in range(3)] for i,name in enumerate(names)}
 

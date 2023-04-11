@@ -1,0 +1,1 @@
+python3 train.py --workers 24 --device 0 --batch-size 4 --epochs 2000 --multi-scale --data data/logos.yaml --img 480 480 --cfg cfg/training/logos.yaml --weights 'yolov7.pt' --name logos --hyp data/hyp.scratch.p6.yaml
