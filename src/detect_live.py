@@ -6,6 +6,7 @@ import cv2
 import torch
 import torch.backends.cudnn as cudnn
 from numpy import random
+import numpy as np
 
 from models.experimental import attempt_load
 from utils.datasets import LoadStreams, LoadImages
@@ -17,15 +18,13 @@ from utils.torch_utils import select_device, load_classifier, time_synchronized,
 
 def detect(save_img=False):
     source, weights, view_img, save_txt, imgsz, trace = opt.source, opt.weights, opt.view_img, opt.save_txt, opt.img_size, not opt.no_trace
-    # save_img = not opt.nosave and not source.endswith('.txt')  # save inference images
     save_img = False
     save_txt = False
+    view_img = True
+    cam_fps = opt.input_fps
+
     webcam = source.isnumeric() or source.endswith('.txt') or source.lower().startswith(
         ('rtsp://', 'rtmp://', 'http://', 'https://'))
-
-    # Directories
-    # save_dir = Path(increment_path(Path(opt.project) / opt.name, exist_ok=opt.exist_ok))  # increment run
-    # (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
 
     # Initialize
     set_logging()
@@ -56,11 +55,8 @@ def detect(save_img=False):
         cudnn.benchmark = True  # set True to speed up constant image size inference
         dataset = LoadStreams(source, img_size=imgsz, stride=stride)
     else:
-        dataset = LoadImages(source, img_size=imgsz, stride=stride)
+        dataset = LoadImages(source,  img_size=imgsz, stride=stride)
 
-    view_img = True
-    save_img = False
-    save_txt = False
 
     # Get names and colors
     names = model.module.names if hasattr(model, 'module') else model.names
@@ -74,6 +70,7 @@ def detect(save_img=False):
 
     t0 = time.time()
     for path, img, im0s, vid_cap in dataset:
+        t_start = time.time()
         img = torch.from_numpy(img).to(device)
         img = img.half() if half else img.float()  # uint8 to fp16/32
         img /= 255.0  # 0 - 255 to 0.0 - 1.0
@@ -108,79 +105,34 @@ def detect(save_img=False):
                 p, s, im0, frame = path[i], '%g: ' % i, im0s[i].copy(), dataset.count
             else:
                 p, s, im0, frame = path, '', im0s, getattr(dataset, 'frame', 0)
-
             p = Path(p)  # to Path
-            # save_path = str(save_dir / p.name)  # img.jpg?
-            # txt_path = str(save_dir / 'labels' / p.stem) + ('' if dataset.mode == 'image' else f'_{frame}')  # img.txt
-            # gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  # normalization gain whwh
+
             if len(det):
-                # Rescale boxes from img_size to im0 size
                 det[:, :4] = scale_coords(img.shape[2:], det[:, :4], im0.shape).round()
-
-                # Print results
-                # for c in det[:, -1].unique():
-                #     n = (det[:, -1] == c).sum()  # detections per class
-                #     s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
-
-                # # Write results
                 for *xyxy, conf, cls in reversed(det):
-                    # if save_txt:  # Write to file
-                        # xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
-                        # line = (cls, *xywh, conf) if opt.save_conf else (cls, *xywh)  # label format
-                        # with open(txt_path + '.txt', 'a') as f:
-                        #     f.write(('%g ' * len(line)).rstrip() % line + '\n')
 
                     if save_img or view_img:  # Add bbox to image
                         label = f'{names[int(cls)]} {conf:.2f}'
                         plot_one_box(xyxy, im0, label=label, color=colors[int(cls)], line_thickness=3)
 
-                if view_img:
-                    # print("WTF")
-                    resize = cv2.resize(im0, [640, 480],interpolation = cv2.INTER_AREA)
-                    cv2.imshow(str(p), resize)
-                    cv2.waitKey(1)  # 1 millisecond
-
-            # Print time (inference + NMS)
-            # print(f'{s}Done. ({(1E3 * (t2 - t1)):.1f}ms) Inference, ({(1E3 * (t3 - t2)):.1f}ms) NMS')
-
-            # # Stream results
-            # if view_img:
-            #     print("SHOWING...?")
-            #     cv2.imshow(str(p), im0)
-            #     cv2.waitKey(1)  # 1 millisecond
-
-            # Save results (image with detections)
-            # if save_img:
-            #     if dataset.mode == 'image':
-            #         cv2.imwrite(save_path, im0)
-            #         print(f" The image with the result is saved in: {save_path}")
-            #     else:  # 'video' or 'stream'
-            #         if vid_path != save_path:  # new video
-            #             vid_path = save_path
-            #             if isinstance(vid_writer, cv2.VideoWriter):
-            #                 vid_writer.release()  # release previous video writer
-            #             if vid_cap:  # video
-            #                 fps = vid_cap.get(cv2.CAP_PROP_FPS)
-            #                 w = int(vid_cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-            #                 h = int(vid_cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-            #             else:  # stream
-            #                 fps, w, h = 30, im0.shape[1], im0.shape[0]
-            #                 save_path += '.mp4'
-            #             vid_writer = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
-            #         vid_writer.write(im0)
-
-    # if save_txt or save_img:
-    #     s = f"\n{len(list(save_dir.glob('labels/*.txt')))} labels saved to {save_dir / 'labels'}" if save_txt else ''
-    #     #print(f"Results saved to {save_dir}{s}")
-
-    # print(f'Done. ({time.time() - t0:.3f}s)')
-
+        t_end = time.time()
+        if view_img:
+            resize = cv2.resize(im0, [640, 480],interpolation = cv2.INTER_AREA)
+            cv2.imshow(str(p), resize)
+            delay = int((1/(t_end-t_start))-(1000/cam_fps))
+            if delay < 0:
+                delay = int(1)
+            cv2.waitKey(delay)  # 1 millisecond
+            t_end2 = time.time()
+            print("FRAME RATE: ", 1/(t_end2-t_start))
+        print("YOLO INFERENCE RATE: ", 1/(t_end-t_start), "\n")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--weights', nargs='+', type=str, default='yolov7.pt', help='model.pt path(s)')
     parser.add_argument('--source', type=str, default='inference/images', help='source')  # file/folder, 0 for webcam
     parser.add_argument('--img-size', type=int, default=640, help='inference size (pixels)')
+    parser.add_argument('--input-fps', type=int, default=20, help='FPS of recorded file')
     parser.add_argument('--conf-thres', type=float, default=0.25, help='object confidence threshold')
     parser.add_argument('--iou-thres', type=float, default=0.45, help='IOU threshold for NMS')
     parser.add_argument('--device', default='', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
@@ -201,9 +153,8 @@ if __name__ == '__main__':
     #check_requirements(exclude=('pycocotools', 'thop'))
 
     with torch.no_grad():
-        if opt.update:  # update all models (to fix SourceChangeWarning)
-            for opt.weights in ['./weights/deer_weights.pt']:
-                detect()
-                strip_optimizer(opt.weights)
+        if opt.update:
+            detect()
+            strip_optimizer(opt.weights)
         else:
             detect()

@@ -19,9 +19,7 @@ w = "./weights/onnx_yv7/yolov7.onnx"
 # providers = ['CUDAExecutionProvider', 'CPUExecutionProvider'] if cuda else ['CPUExecutionProvider']
 print(ort.get_available_providers())
 
-
 providers = ['CPUExecutionProvider']
-
 session = ort.InferenceSession(w, providers=providers)
 # sys.exit(1)
 
@@ -64,7 +62,7 @@ names = ['person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', '
          'microwave', 'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock', 'vase', 'scissors', 'teddy bear', 
          'hair drier', 'toothbrush']
 
-names = ['deer', 'starbucks', 'ou_logo', 'tim_hortons', 'kroger', 'traffic_cone']
+# names = ['deer', 'starbucks', 'ou_logo', 'tim_hortons', 'kroger', 'traffic_cone']
 
 
 #Creating random colors for bounding box visualization.
