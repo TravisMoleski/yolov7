@@ -3,7 +3,7 @@
 * First install python requirements with requirements.txt
 * Will need CUDA for Pytorch
 
-FIRST:
+THEN:
 ```shell
 cd src
 ```
