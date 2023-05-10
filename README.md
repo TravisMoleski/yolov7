@@ -1,4 +1,39 @@
-# Official YOLOv7
+
+# FOR ASYMMETRIC:
+First install python requirements with requirements.txt
+Will need CUDA for Pytorch
+
+### Will need:
+Weights: COCO dataset, put in weights folder
+```shell
+    wget https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7.pt
+```
+
+Video/image file: Put in video folder
+* Example: https://www.youtube.com/watch?v=4OftD5ni7XA&ab_channel=JUtah
+* Will need to find way to download
+
+### RUN THIS AFTER ABOVE CONDITIONS ARE MET TO VIEW VIDEO LIVE:
+Will need to change video file name and target FPS.
+```shell
+python3 detect_live.py --input-fps 20 --weights ./weights/yolov7.pt --conf 0.55 --img-size 480 --source ./video/leopard6mm21122022.mp4
+```
+
+or modify and run:
+```shell
+./runDetectLive.sh
+```
+
+### RUN THIS AFTER ABOVE CONDITIONS ARE MET TO PROCESS AND STORE VIDEO:
+Will need to change video file name and target FPS.
+```shell
+python3 detect.py --weights ./weights/yolov7.pt --conf 0.25 --img-size 480 --source ./video/04072023Uptown.mp4
+```
+
+or modify and run:
+```shell
+./runDetectStatic.sh
+```
 
 Implementation of paper - [YOLOv7: Trainable bag-of-freebies sets new state-of-the-art for real-time object detectors](https://arxiv.org/abs/2207.02696)
 
