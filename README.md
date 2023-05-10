@@ -3,19 +3,26 @@
 * First install python requirements with requirements.txt
 * Will need CUDA for Pytorch
 
+FIRST:
+```shell
+cd src
+```
+
 ### Will need:
 Weights: COCO dataset, put in weights folder
 ```shell
 wget https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7.pt -O ./weights/yolov7.pt
 ```
-#### Video Example
-Video/image file: Put in video folder
-* Example video: https://www.youtube.com/watch?v=4OftD5ni7XA&ab_channel=JUtah
-* Will need to find way to download
-
-#### Image Example
-* Example image:
+#### Video Example Download
+*Warning: 160 MB video file.
 ```shell
+mkdir videos
+wget https://github.com/WHERESystem/yolov7/releases/download/videoExample/OUVanUptownExample.mp4 -O ./videos/OUVanUptownExample.mp4
+```
+
+#### Image Example Download
+```shell
+mkdir testImg
 wget https://i.ytimg.com/vi/1vP3AE978u4/maxresdefault.jpg -O ./testImg/newYork.jpg
 ```
 ### RUN THIS AFTER ABOVE CONDITIONS ARE MET TO PROCESS AND STORE:
@@ -31,7 +38,7 @@ or modify and run:
 ### VIEW VIDEO LIVE:
 Will need to change video file name and target FPS.
 ```shell
-python3 detect_live.py --input-fps 20 --weights ./weights/yolov7.pt --conf 0.55 --img-size 480 --source ./testImg/newYork.jpg
+python3 detect_live.py --input-fps 20 --weights ./weights/yolov7.pt --conf 0.55 --img-size 480 --source ./videos/OUVanUptownExample.mp4
 ```
 or modify and run:
 ```shell
@@ -288,26 +295,6 @@ YOLOv7 with decoupled TAL head (YOLOR + YOLOv5 + YOLOv6)
   year={2022}
 }
 ```
-
-
-## Teaser
-
-Yolov7-semantic & YOLOv7-panoptic & YOLOv7-caption
-
-<div align="center">
-    <a href="./">
-        <img src="./figure/tennis.jpg" width="24%"/>
-    </a>
-    <a href="./">
-        <img src="./figure/tennis_semantic.jpg" width="24%"/>
-    </a>
-    <a href="./">
-        <img src="./figure/tennis_panoptic.png" width="24%"/>
-    </a>
-    <a href="./">
-        <img src="./figure/tennis_caption.png" width="24%"/>
-    </a>
-</div>
 
 
 ## Acknowledgements
