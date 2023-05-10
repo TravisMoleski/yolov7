@@ -18,28 +18,27 @@ Video/image file: Put in video folder
 ```shell
 wget https://i.ytimg.com/vi/1vP3AE978u4/maxresdefault.jpg -O ./testImg/newYork.jpg
 ```
+### RUN THIS AFTER ABOVE CONDITIONS ARE MET TO PROCESS AND STORE:
+Will need to change video file name and target FPS. Output will be automatically saved to ./runs/detect/*
+```shell
+python3 detect.py --weights ./weights/yolov7.pt --conf 0.25 --img-size 480 --source ./testImg/newYork.jpg
+```
+or modify and run:
+```shell
+./runDetectStatic.sh
+```
 
-### RUN THIS AFTER ABOVE CONDITIONS ARE MET TO VIEW VIDEO LIVE:
+### VIEW VIDEO LIVE:
 Will need to change video file name and target FPS.
 ```shell
 python3 detect_live.py --input-fps 20 --weights ./weights/yolov7.pt --conf 0.55 --img-size 480 --source ./testImg/newYork.jpg
 ```
-
 or modify and run:
 ```shell
 ./runDetectLive.sh
 ```
 
-### RUN THIS AFTER ABOVE CONDITIONS ARE MET TO PROCESS AND STORE VIDEO:
-Will need to change video file name and target FPS. Output will be automatically saved to ./runs/detect/*
-```shell
-python3 detect.py --weights ./weights/yolov7.pt --conf 0.25 --img-size 480 --source ./testImg/newYork.jpg
-```
 
-or modify and run:
-```shell
-./runDetectStatic.sh
-```
 
 Implementation of paper - [YOLOv7: Trainable bag-of-freebies sets new state-of-the-art for real-time object detectors](https://arxiv.org/abs/2207.02696)
 
