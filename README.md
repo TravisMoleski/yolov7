@@ -6,17 +6,23 @@
 ### Will need:
 Weights: COCO dataset, put in weights folder
 ```shell
-    wget https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7.pt
+wget https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7.pt -O ./weights/yolov7.pt
 ```
-
+#### Video Example
 Video/image file: Put in video folder
-* Example: https://www.youtube.com/watch?v=4OftD5ni7XA&ab_channel=JUtah
+* Example video: https://www.youtube.com/watch?v=4OftD5ni7XA&ab_channel=JUtah
 * Will need to find way to download
+
+#### Image Example
+* Example image:
+```shell
+wget https://i.ytimg.com/vi/1vP3AE978u4/maxresdefault.jpg -O ./testImg/newYork.jpg
+```
 
 ### RUN THIS AFTER ABOVE CONDITIONS ARE MET TO VIEW VIDEO LIVE:
 Will need to change video file name and target FPS.
 ```shell
-python3 detect_live.py --input-fps 20 --weights ./weights/yolov7.pt --conf 0.55 --img-size 480 --source ./video/leopard6mm21122022.mp4
+python3 detect_live.py --input-fps 20 --weights ./weights/yolov7.pt --conf 0.55 --img-size 480 --source ./testImg/newYork.jpg
 ```
 
 or modify and run:
@@ -27,7 +33,7 @@ or modify and run:
 ### RUN THIS AFTER ABOVE CONDITIONS ARE MET TO PROCESS AND STORE VIDEO:
 Will need to change video file name and target FPS. Output will be automatically saved to ./runs/detect/*
 ```shell
-python3 detect.py --weights ./weights/yolov7.pt --conf 0.25 --img-size 480 --source ./video/04072023Uptown.mp4
+python3 detect.py --weights ./weights/yolov7.pt --conf 0.25 --img-size 480 --source ./testImg/newYork.jpg
 ```
 
 or modify and run:
