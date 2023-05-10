@@ -2,7 +2,7 @@
 # FOR ASYMMETRIC:
 * First install python requirements with requirements.txt
  ```shell
-pip3 instal -r requirements.txt
+pip3 install -r requirements.txt
 ```
 * Will need CUDA for Pytorch
 
