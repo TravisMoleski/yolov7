@@ -1,7 +1,7 @@
 
 # FOR ASYMMETRIC:
-First install python requirements with requirements.txt
-Will need CUDA for Pytorch
+* First install python requirements with requirements.txt
+* Will need CUDA for Pytorch
 
 ### Will need:
 Weights: COCO dataset, put in weights folder
@@ -25,7 +25,7 @@ or modify and run:
 ```
 
 ### RUN THIS AFTER ABOVE CONDITIONS ARE MET TO PROCESS AND STORE VIDEO:
-Will need to change video file name and target FPS.
+Will need to change video file name and target FPS. Output will be automatically saved to ./runs/detect/*
 ```shell
 python3 detect.py --weights ./weights/yolov7.pt --conf 0.25 --img-size 480 --source ./video/04072023Uptown.mp4
 ```
