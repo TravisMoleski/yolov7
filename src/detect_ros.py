@@ -321,8 +321,8 @@ if __name__ == '__main__':
     imgsz = rospy.get_param('inference_size')
     trace =  False
     augment = False
-    conf_thres = 0.3
-    iou_thres  = 0.3
+    conf_thres = 0.6
+    iou_thres  = 0.6
 
     classes = np.linspace(0,79,79).astype(int)
 
