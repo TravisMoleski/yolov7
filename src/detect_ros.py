@@ -231,7 +231,7 @@ def detect(topic, source, weights, view_img, save_txt, imgsz, trace, device, aug
              
 
 
-                ros_image = Image(encoding="rgb8")
+                ros_image = Image(encoding="bgr8")
                 # Create the header
                 ros_image.header.stamp = rospy.Time.now()
                 # ros_image.header.frame_id = id
@@ -321,16 +321,16 @@ if __name__ == '__main__':
     imgsz = rospy.get_param('inference_size')
     trace =  False
     augment = False
-    conf_thres = 0.6
-    iou_thres  = 0.6
+    conf_thres = 0.4
+    iou_thres  = 0.4
 
     classes = np.linspace(0,79,79).astype(int)
 
     agnostic_nms = False
 
-    print(classes)
+    # print(classes)
 
-    print(weights)
+    # print(weights)
     rospy.wait_for_message(topic, Image, timeout=60)
     with torch.no_grad():
         if update:  # update all models (to fix SourceChangeWarning)
