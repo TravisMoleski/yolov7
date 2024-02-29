@@ -245,7 +245,7 @@ def detect(topic, source, weights, view_img, save_txt, imgsz, trace, device, aug
                 im_hand.bbox_pub.publish(bounding_boxes)
 
             t_end = time.time()
-            rospy.loginfo("YOLO UPDATE RATE: %s", 1/(t_end-t_start))
+            # rospy.loginfo("YOLO UPDATE RATE: %s", 1/(t_end-t_start))
 
             # Print time (inference + NMS)
             # print(f'{s}Done. ({(1E3 * (t2 - t1)):.1f}ms) Inference, ({(1E3 * (t3 - t2)):.1f}ms) NMS')
@@ -321,8 +321,8 @@ if __name__ == '__main__':
     imgsz = rospy.get_param('inference_size')
     trace =  False
     augment = False
-    conf_thres = 0.4
-    iou_thres  = 0.4
+    conf_thres = 0.6
+    iou_thres  = 0.6
 
     classes = np.linspace(0,79,79).astype(int)
 
